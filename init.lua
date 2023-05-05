@@ -1,5 +1,5 @@
 require "remap"
 require "options"
-require "packer"
+require "plugins"
 require "autocmds"
 
