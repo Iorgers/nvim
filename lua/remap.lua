@@ -10,7 +10,6 @@ vim.keymap.set("n", "<leader>e", vim.cmd.Ex)
 -- Center after certain commands
 keymap("n", "<C-d>", "<C-d>zz", opts)
 keymap("n", "<C-u>", "<C-u>zz", opts)
-
 keymap("n", "n", "nzz", opts)
 keymap("n", "N", "Nzz", opts)
 
@@ -29,3 +28,6 @@ vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz")
 vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz")
 vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz")
 
+vim.keymap.set("n", "<leader>b", "<cmd>Telescope buffers<CR>")
+vim.keymap.set("n", "<leader>f", "<cmd>Telescope find_files<CR>")
+vim.keymap.set("n", "<leader>s", "<cmd>Telescope live_grep<CR>")

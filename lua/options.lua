@@ -11,7 +11,7 @@ local options = {
 
   cursorline=false,
 
-  signcolumn="no",
+  signcolumn="yes",
 
   path=".,**",
 
