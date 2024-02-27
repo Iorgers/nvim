@@ -24,14 +24,6 @@ vim.cmd [[
   augroup end
 ]]
 
--- Autocommand that reloads neovim whenever you save the init.lua file
-vim.cmd [[
-  augroup user_auto_source_vimrc
-    au!
-    au BufWritePost init.lua silent! source <afile> | echom "Reloaded"
-  augroup end
-]]
-
 -- Autocommand that adds highlights to trailing whitespaces after colorscheme changed
 vim.cmd [[
   augroup highlight_colorscheme

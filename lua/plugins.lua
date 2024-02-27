@@ -1,46 +1,26 @@
 local fn = vim.fn
 
--- Automatically install packer
-local install_path = fn.stdpath "data" .. "/site/pack/packer/start/packer.nvim"
-
-if fn.empty(fn.glob(install_path)) > 0 then
-    PACKER_BOOTSTRAP = fn.system {
-        "git",
-        "clone",
-        "--depth",
-        "1",
-        "https://github.com/wbthomason/packer.nvim",
-        install_path,
-    }
-    print "Installing packer close and reopen Neovim..."
-    vim.cmd [[packadd packer.nvim]]
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable", -- latest stable release
+    lazypath,
+  })
 end
-
--- Use a protected call so we don't error out on first use
-local status_ok, packer = pcall(require, "packer")
-if not status_ok then
-    return
-end
-
--- Have packer use a popup window
-packer.init {
-    display = {
-        open_fn = function()
-            return require("packer.util").float {}
-        end,
-    },
-}
+vim.opt.rtp:prepend(lazypath)
 
 -- Install your plugins here
-return packer.startup(function(use)
-
-    use "wbthomason/packer.nvim" -- Have packer manage itself
+require("lazy").setup({
 
     -- Colorschemes
-    use { 'rose-pine/neovim', as = 'rose-pine' }
+    { 'rose-pine/neovim', as = 'rose-pine' },
 
     -- Trouble
-    use({
+    {
         "folke/trouble.nvim",
         config = function()
             require("trouble").setup {
@@ -50,40 +30,39 @@ return packer.startup(function(use)
                 -- refer to the configuration section below
             }
         end
-    })
+    },
 
     -- Treesitter
-    use {
+    {
         'nvim-treesitter/nvim-treesitter',
-        run = ':TSUpdate'
-    }
+        build = ':TSUpdate' },
 
-    use 'nvim-treesitter/playground'
+    'nvim-treesitter/playground',
 
     -- Undotree
-    use 'mbbill/undotree'
+    'mbbill/undotree',
 
     -- Git Integration
-    use 'tpope/vim-fugitive'
+    'tpope/vim-fugitive',
 
-    use {
+    {
         'lewis6991/gitsigns.nvim',
         config = function()
             require('gitsigns').setup()
         end
-    }
+    },
 
     -- Telescope
-    use {
+    {
         'nvim-telescope/telescope.nvim', tag = '0.1.5',
-        requires = { {'nvim-lua/plenary.nvim'} }
-    }
+        dependencies = { {'nvim-lua/plenary.nvim'} }
+    },
 
     -- LSP Config
-    use {
+    {
         'VonHeikemen/lsp-zero.nvim',
         branch = 'v1.x',
-        requires = {
+        dependencies = {
             -- LSP Support
             {'neovim/nvim-lspconfig'},
             {'williamboman/mason.nvim'},
@@ -101,16 +80,10 @@ return packer.startup(function(use)
             {'L3MON4D3/LuaSnip'},
             {'rafamadriz/friendly-snippets'},
         }
-    }
+    },
 
     -- Cool stuff
-    use 'eandrju/cellular-automaton.nvim'
-    use 'folke/zen-mode.nvim'
-
-    -- Automatically set up your configuration after cloning packer.nvim
-    -- Put this at the end after all plugins
-    if PACKER_BOOTSTRAP then
-        require("packer").sync()
-    end
-end)
+    'eandrju/cellular-automaton.nvim',
+    'folke/zen-mode.nvim',
+})
 
