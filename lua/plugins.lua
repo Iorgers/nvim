@@ -35,6 +35,7 @@ require("lazy").setup({
 
     -- Colorschemes
     { 'rose-pine/neovim', as = 'rose-pine' },
+    { "catppuccin/nvim", name = "catppuccin" },
 
     'folke/tokyonight.nvim',
 
