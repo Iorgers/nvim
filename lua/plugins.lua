@@ -16,8 +16,27 @@ vim.opt.rtp:prepend(lazypath)
 -- Install your plugins here
 require("lazy").setup({
 
+    -- PHP
+    'praem90/nvim-phpcsf',
+
+    {
+      "NeogitOrg/neogit",
+      dependencies = {
+        "nvim-lua/plenary.nvim",         -- required
+        "sindrets/diffview.nvim",        -- optional - Diff integration
+
+        -- Only one of these is needed, not both.
+        "nvim-telescope/telescope.nvim", -- optional
+        "ibhagwan/fzf-lua",              -- optional
+      },
+      config = true
+    },
+
+
     -- Colorschemes
     { 'rose-pine/neovim', as = 'rose-pine' },
+
+    'folke/tokyonight.nvim',
 
     -- Trouble
     {

@@ -20,8 +20,16 @@ vim.cmd [[
 vim.cmd [[
   augroup packer_user_config
     au!
-    au BufWritePost plugins.lua source <afile> | PackerSync
+    au BufWritePost plugins.lua source <afile> | Lazy
   augroup end
+]]
+
+vim.cmd [[
+    augroup PHBSCF
+        autocmd!
+        autocmd BufWritePost,BufReadPost,InsertLeave *.php :lua require'phpcs'.cs()
+        autocmd BufWritePost *.php :lua require'phpcs'.cbf()
+    augroup END
 ]]
 
 -- Autocommand that adds highlights to trailing whitespaces after colorscheme changed
@@ -30,4 +38,10 @@ vim.cmd [[
     au!
     au ColorScheme * silent! execute matchadd("ErrorMsg", "\\s\\+$")
   augroup end
+]]
+
+vim.cmd [[
+    let g:nvim_phpcs_config_phpcs_path = 'phpcs'
+    let g:nvim_phpcs_config_phpcbf_path = 'phpcbf'
+    let g:nvim_phpcs_config_phpcs_standard = 'PSR2'
 ]]
