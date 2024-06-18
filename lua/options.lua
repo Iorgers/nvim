@@ -9,7 +9,10 @@ local options = {
   number=true,
   relativenumber=true,
 
-  cursorline=false,
+  laststatus=1,
+  showtabline=2,
+
+  cursorline=true,
 
   signcolumn="yes",
 

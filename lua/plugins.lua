@@ -16,6 +16,50 @@ vim.opt.rtp:prepend(lazypath)
 -- Install your plugins here
 require("lazy").setup({
 
+    'github/copilot.vim',
+
+    -- install without yarn or npm
+    {
+        "iamcco/markdown-preview.nvim",
+        cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+        ft = { "markdown" },
+        build = function() vim.fn["mkdp#util#install"]() end,
+    },
+
+    { "tpope/vim-commentary" },
+
+    -- Ollama integration
+    { "David-Kunz/gen.nvim" },
+
+
+    -- ChatGPT integration
+    {
+      "jackMort/ChatGPT.nvim",
+        event = "VeryLazy",
+        config = function()
+          require("chatgpt").setup()
+        end,
+        dependencies = {
+          "MunifTanjim/nui.nvim",
+          "nvim-lua/plenary.nvim",
+          "folke/trouble.nvim",
+          "nvim-telescope/telescope.nvim"
+        }
+    },
+
+    -- Another ChatGPT plugin
+    {
+        "robitx/gp.nvim",
+        config = function()
+            require("gp").setup()
+
+            -- or setup with your own config (see Install > Configuration in Readme)
+            -- require("gp").setup(config)
+
+                -- shortcuts might be setup here (see Usage > Shortcuts in Readme)
+        end,
+    },
+
     -- PHP
     'praem90/nvim-phpcsf',
 
@@ -58,6 +102,8 @@ require("lazy").setup({
         build = ':TSUpdate' },
 
     'nvim-treesitter/playground',
+
+    'nvim-treesitter/nvim-treesitter-textobjects',
 
     -- Undotree
     'mbbill/undotree',
