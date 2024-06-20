@@ -42,3 +42,5 @@ for key, value in pairs(options) do
   vim.opt[key] = value
 end
 
+vim.g.copilot_no_tab_map = true
+vim.api.nvim_set_keymap("i", "<C-J>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
