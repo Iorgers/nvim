@@ -46,10 +46,8 @@ vim.api.nvim_create_autocmd("VimEnter", {
       "bash",
       "-c",
       string.format(
-        "cd %s && git fetch origin %s > /dev/null 2>&1 && git checkout %s 2>&1 && git pull --ff-only origin %s 2>&1",
+        "cd %s && git pull --ff-only origin %s 2>&1",
         config_path,
-        branch,
-        branch,
         branch
       )
     }
