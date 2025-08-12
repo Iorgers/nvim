@@ -40,7 +40,19 @@ vim.api.nvim_create_autocmd("VimEnter", {
 vim.api.nvim_create_autocmd("VimEnter", {
   callback = function()
     local config_path = vim.fn.stdpath("config")
-    local branch = vim.fn.system("git rev-parse --abbrev-ref HEAD"):gsub("\n", "")
+
+    local branch_cmd = {
+        "git",
+        "-C",
+        config_path,
+        "rev-parse",
+        "--abbrev-ref",
+        "HEAD"
+    };
+
+    local concatenated = table.concat(branch_cmd, " ")
+
+    local branch = vim.fn.system(concatenated):gsub("\n", "")
 
     local cmd = {
       "bash",
