@@ -58,13 +58,29 @@ vim.api.nvim_create_autocmd("VimEnter", {
       stdout_buffered = true,
       stderr_buffered = true,
       on_stdout = function(_, data)
-        if data then
-          vim.notify(table.concat(data, "\n"), vim.log.levels.INFO)
+        if data and #data > 0 then
+          local filtered = {}
+          for _, line in ipairs(data) do
+            if line:match("%S") then
+              table.insert(filtered, line)
+            end
+          end
+          if #filtered > 0 then
+            vim.notify(table.concat(filtered, "\n"), vim.log.levels.INFO)
+          end
         end
       end,
       on_stderr = function(_, data)
-        if data then
-          vim.notify(table.concat(data, "\n"), vim.log.levels.ERROR)
+        if data and #data > 0 then
+          local filtered = {}
+          for _, line in ipairs(data) do
+            if line:match("%S") then
+              table.insert(filtered, line)
+            end
+          end
+          if #filtered > 0 then
+            vim.notify(table.concat(filtered, "\n"), vim.log.levels.ERROR)
+          end
         end
       end,
     })
