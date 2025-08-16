@@ -49,3 +49,107 @@ vim.cmd [[
     au ColorScheme * silent! execute "hi clear NotifyINFOBorder guibg=NONE ctermbg=NONE"
   augroup end
 ]]
+
+local timer = nil
+
+local function enable_hlsearch_with_timer()
+  vim.opt.hlsearch = true
+
+  if timer then
+    timer:stop()
+    timer:close()
+  end
+
+  timer = vim.loop.new_timer()
+  timer:start(1000, 0, function()
+    vim.schedule(function()
+      vim.opt.hlsearch = false
+    end)
+  end)
+end
+
+for _, key in ipairs({ "*", "#", "g*", "g#", "n", "N" }) do
+  vim.keymap.set("n", key, function()
+    vim.cmd("normal! " .. key)
+    enable_hlsearch_with_timer()
+  end, { noremap = true, silent = true })
+end
+
+vim.api.nvim_create_autocmd("CmdlineEnter", {
+  pattern = { "/", "?" },
+  callback = function()
+    enable_hlsearch_with_timer()
+  end,
+})
+
+-- Automatically reload init.lua when saved
+local reload_group = vim.api.nvim_create_augroup("ReloadInit", { clear = true })
+
+vim.api.nvim_create_autocmd("BufWritePost", {
+  group = reload_group,
+  pattern = "init.lua",
+  callback = function()
+    vim.cmd("source %")
+  end,
+})
+
+-- Auto update Neovim config from a git repository on startup
+vim.api.nvim_create_autocmd("VimEnter", {
+  callback = function()
+    local config_path = vim.fn.stdpath("config")
+
+    local branch_cmd = {
+        "git",
+        "-C",
+        config_path,
+        "rev-parse",
+        "--abbrev-ref",
+        "HEAD"
+    };
+
+    local concatenated = table.concat(branch_cmd, " ")
+
+    local branch = vim.fn.system(concatenated):gsub("\n", "")
+
+    local cmd = {
+      "bash",
+      "-c",
+      string.format(
+        "cd %s && git pull --ff-only origin %s 2>&1",
+        config_path,
+        branch
+      )
+    }
+
+    vim.fn.jobstart(cmd, {
+      stdout_buffered = true,
+      stderr_buffered = true,
+      on_stdout = function(_, data)
+        if data and #data > 0 then
+          local filtered = {}
+          for _, line in ipairs(data) do
+            if line:match("%S") then
+              table.insert(filtered, line)
+            end
+          end
+          if #filtered > 0 then
+            vim.notify(table.concat(filtered, "\n"), vim.log.levels.INFO)
+          end
+        end
+      end,
+      on_stderr = function(_, data)
+        if data and #data > 0 then
+          local filtered = {}
+          for _, line in ipairs(data) do
+            if line:match("%S") then
+              table.insert(filtered, line)
+            end
+          end
+          if #filtered > 0 then
+            vim.notify(table.concat(filtered, "\n"), vim.log.levels.ERROR)
+          end
+        end
+      end,
+    })
+  end,
+})
